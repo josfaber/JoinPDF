@@ -1,6 +1,6 @@
 [package]
 name = "joinpdf"
-version = "0.1.0"
+version = "0.1.1"
 description = "Join multiple PDFs into one"
 license = "MIT"
 edition = "2021"

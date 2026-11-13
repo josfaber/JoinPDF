@@ -12,8 +12,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: npm
@@ -28,16 +28,16 @@ jobs:
       matrix:
         include:
           - platform: macos-latest
-            args: --target universal-apple-darwin
+            args: --target universal-apple-darwin --bundles dmg
             rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
           - platform: windows-latest
-            args: ""
+            args: --bundles nsis
             rust-targets: ""
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: npm
@@ -52,34 +52,55 @@ jobs:
 
       - run: npm ci
 
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Build only; the release job below picks the files to publish.
+      - uses: tauri-apps/tauri-action@action-v1.0.0
+        id: tauri
         with:
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          releaseName: JoinPDF ${{ github.ref_name }}
-          releaseBody: |
-            Unsigned build. See the README for how to open it the first time.
-          releaseDraft: true
           args: ${{ matrix.args }}
 
-      - name: Package portable Windows exe
-        if: matrix.platform == 'windows-latest'
-        shell: pwsh
+      - name: Collect macOS dmg
+        if: runner.os == 'macOS'
+        env:
+          VERSION: ${{ steps.tauri.outputs.appVersion }}
         run: |
-          Compress-Archive -Path src-tauri/target/release/joinpdf.exe `
-            -DestinationPath "JoinPDF_${{ github.ref_name }}_x64_portable.zip"
+          mkdir out
+          cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg "out/JoinPDF_${VERSION}_universal.dmg"
 
-      - name: Upload portable zip to release
-        if: matrix.platform == 'windows-latest' && github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
+      - name: Collect Windows installer and portable zip
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.tauri.outputs.appVersion }}
+        run: |
+          New-Item -ItemType Directory out | Out-Null
+          Copy-Item (Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe) "out/JoinPDF_${env:VERSION}_x64-setup.exe"
+          Compress-Archive -Path src-tauri/target/release/joinpdf.exe -DestinationPath "out/JoinPDF_${env:VERSION}_x64_portable.zip"
+
+      - uses: actions/upload-artifact@v7
         with:
+          name: joinpdf-${{ runner.os }}
+          path: out/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: out
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          name: JoinPDF ${{ github.ref_name }}
           draft: true
-          files: JoinPDF_*_portable.zip
+          files: out/*
+          body: |
+            ### Downloads
+            - **macOS** (Intel + Apple Silicon): `JoinPDF_*_universal.dmg`
+            - **Windows installer** (no admin rights needed): `JoinPDF_*_x64-setup.exe`
+            - **Windows portable**: `JoinPDF_*_x64_portable.zip`
 
-      - name: Upload portable zip as workflow artifact
-        if: matrix.platform == 'windows-latest' && github.ref_type != 'tag'
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-portable
-          path: JoinPDF_*_portable.zip
+            These builds are not code-signed. See the [README](https://github.com/josfaber/JoinPDF#first-launch-unsigned-app) for how to open them the first time.

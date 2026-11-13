@@ -64,7 +64,13 @@ files.onChange(render);
 
 Sortable.create(listEl, {
   animation: 150,
+  // While dragging, the row's slot in the list is shown as a drop line
+  // (.row-ghost) and a floating copy (.row-drag) follows the pointer.
+  // forceFallback avoids HTML5 drag-and-drop, which conflicts with Tauri's
+  // native file drop on Windows.
+  forceFallback: true,
   ghostClass: "row-ghost",
+  fallbackClass: "row-drag",
   onEnd: (evt) => {
     if (evt.oldIndex == null || evt.newIndex == null) return;
     files.move(evt.oldIndex, evt.newIndex);
