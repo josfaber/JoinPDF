@@ -67,7 +67,7 @@ git pull
 docker compose -f web/docker-compose.yml up -d --build
 ```
 
-It listens on `127.0.0.1:8084`; set `JOINPDF_PORT` to change that. Point your reverse proxy (which handles TLS) at it and pass the client IP in `X-Forwarded-For`, so rate limiting is per visitor.
+It listens on port 8084 on all interfaces; set `JOINPDF_PORT` to change the port, or `JOINPDF_BIND=127.0.0.1` to keep it off the LAN. Point your reverse proxy (which handles TLS) at it and pass the client IP in `X-Forwarded-For`, so rate limiting is per visitor.
 
 Pangolin (Newt running with host networking): add a resource for `joinpdf.josfaber.nl` with target `http://127.0.0.1:8084`.
 
