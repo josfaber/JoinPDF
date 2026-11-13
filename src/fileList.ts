@@ -69,10 +69,22 @@ export class FileList {
     this.emit();
   }
 
-  move(from: number, to: number): void {
-    if (from === to) return;
-    const [item] = this.entries.splice(from, 1);
-    this.entries.splice(to, 0, item);
+  /**
+   * Reorders to match `ids` (e.g. read from the DOM after a drag). Unknown ids
+   * are ignored; entries missing from `ids` keep their relative order at the end.
+   */
+  setOrder(ids: number[]): void {
+    const byId = new Map(this.entries.map((e) => [e.id, e]));
+    const ordered: FileEntry[] = [];
+    for (const id of ids) {
+      const entry = byId.get(id);
+      if (entry) {
+        ordered.push(entry);
+        byId.delete(id);
+      }
+    }
+    ordered.push(...this.entries.filter((e) => byId.has(e.id)));
+    this.entries = ordered;
     this.emit();
   }
 }

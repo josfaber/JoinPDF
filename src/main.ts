@@ -71,9 +71,16 @@ Sortable.create(listEl, {
   forceFallback: true,
   ghostClass: "row-ghost",
   fallbackClass: "row-drag",
-  onEnd: (evt) => {
-    if (evt.oldIndex == null || evt.newIndex == null) return;
-    files.move(evt.oldIndex, evt.newIndex);
+  fallbackOnBody: true,
+  // Renumber live so the numbers show the order you're about to get.
+  onChange: () => {
+    listEl.querySelectorAll<HTMLElement>(".row .index").forEach((el, i) => (el.textContent = `${i + 1}.`));
+  },
+  // Take the order straight from the DOM Sortable produced, so what you see is
+  // always what gets merged (index bookkeeping can drift from the DOM).
+  onEnd: () => {
+    const ids = [...listEl.querySelectorAll<HTMLElement>(".row")].map((li) => Number(li.dataset.id));
+    files.setOrder(ids);
   },
 });
 
@@ -130,7 +137,8 @@ getCurrentWebview().onDragDropEvent((event) => {
   const { type } = event.payload;
   if (type === "enter" || type === "over") dropZone.classList.add("drag-over");
   else dropZone.classList.remove("drag-over");
-  if (type === "drop" && !busy) void addPaths(event.payload.paths);
+  // Internal drags (reordering rows) can also surface here with no paths.
+  if (type === "drop" && !busy && event.payload.paths.length) void addPaths(event.payload.paths);
 });
 
 // ---------- generating ----------
