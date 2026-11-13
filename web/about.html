@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="How JoinPDF works: PDFs are combined in your browser and never uploaded." />
+    <meta name="referrer" content="no-referrer" />
+    <title>How it works · JoinPDF</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="page page-text">
+      <header class="header">
+        <a class="brand" href="/">
+          <img src="/favicon.svg" alt="" width="28" height="28" />
+          <span>JoinPDF</span>
+        </a>
+        <div class="lang-switch" role="group" aria-label="Language / Taal">
+          <button type="button" data-set-lang="en">EN</button>
+          <button type="button" data-set-lang="nl">NL</button>
+        </div>
+      </header>
+
+      <p><a href="/" data-i18n="back"></a></p>
+
+      <article class="prose" data-lang-block lang="en">
+        <h1>How JoinPDF works</h1>
+
+        <h2>What it does</h2>
+        <p>
+          JoinPDF combines several PDF files into a single PDF. You add files by dragging them onto the page or with
+          the <strong>Add files</strong> button, put them in the order you want by dragging them, and click
+          <strong>Combine &amp; download</strong>. Your browser then saves one PDF that contains all pages of all
+          files, in that order.
+        </p>
+
+        <h2>Your files are never uploaded</h2>
+        <p>
+          Everything happens inside your own browser, on your own device. When you add a file, your browser reads it
+          into its memory. Combining is done by JavaScript running in that same browser tab, using the open-source
+          <a href="https://pdf-lib.js.org/" rel="noopener">pdf-lib</a> library. The result is handed straight to your
+          browser's download function.
+        </p>
+        <ul>
+          <li>No file, page, file name or file content is ever sent to our server or to anyone else.</li>
+          <li>Nothing is stored: not on the server, and not in your browser either. Close or reload the tab and the files are gone from memory.</li>
+          <li>There are no accounts, no cookies, no analytics, no trackers and no third-party scripts.</li>
+          <li>The only thing remembered is your language choice (English or Dutch), stored in your own browser.</li>
+        </ul>
+        <p>
+          This is not just a promise: the website tells your browser, through its security policy
+          (<code>Content-Security-Policy: connect-src 'none'; form-action 'none'</code>), that this page is not allowed
+          to send data anywhere. Your browser enforces that, so even a bug could not upload your files.
+        </p>
+
+        <h2>Check it yourself</h2>
+        <ul>
+          <li>Open your browser's developer tools, go to the <em>Network</em> tab and combine some files: you will see no requests carrying your files.</li>
+          <li>Or load this page, disconnect from the internet, and combine files: it keeps working, because nothing needs the network.</li>
+          <li>The complete source code is public on <a href="https://github.com/josfaber/JoinPDF" rel="noopener">GitHub</a> (MIT license).</li>
+        </ul>
+
+        <h2>What the server does see</h2>
+        <p>
+          The server only delivers the web page itself (HTML, JavaScript, CSS and the icon). Like any web server it may
+          log technical data about those page requests, such as IP address, time and the page requested, to protect
+          against abuse. It never receives your PDFs.
+        </p>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Password-protected PDFs can't be combined; they are marked in the list.</li>
+          <li>Pages are copied exactly as they are, without re-rendering, so quality doesn't change.</li>
+          <li>Bookmarks (the document outline) and fillable form fields from the source files are not carried over.</li>
+          <li>Very large files are limited by the memory of your device and browser.</li>
+        </ul>
+
+        <h2 id="disclaimer">Disclaimer</h2>
+        <p>
+          JoinPDF is provided free of charge and "as is", without any warranty. You are solely responsible for the
+          files you combine with it and for what you do with the result. Only use documents that you own or that you
+          are otherwise allowed to use, copy and modify, and respect the confidentiality, copyright and privacy rules
+          that apply to them. The maker of JoinPDF accepts no liability for any loss, damage or legal consequence that
+          results from using this website.
+        </p>
+      </article>
+
+      <article class="prose" data-lang-block lang="nl">
+        <h1>Hoe JoinPDF werkt</h1>
+
+        <h2>Wat het doet</h2>
+        <p>
+          JoinPDF voegt meerdere pdf-bestanden samen tot één pdf. Je voegt bestanden toe door ze naar de pagina te
+          slepen of met de knop <strong>Bestanden toevoegen</strong>, zet ze in de gewenste volgorde door ze te slepen,
+          en klikt op <strong>Samenvoegen &amp; downloaden</strong>. Je browser slaat dan één pdf op met alle pagina's
+          van alle bestanden, in die volgorde.
+        </p>
+
+        <h2>Je bestanden worden nooit geüpload</h2>
+        <p>
+          Alles gebeurt in je eigen browser, op je eigen apparaat. Als je een bestand toevoegt, leest je browser het in
+          zijn geheugen. Het samenvoegen gebeurt door JavaScript in datzelfde browsertabblad, met de open-source
+          bibliotheek <a href="https://pdf-lib.js.org/" rel="noopener">pdf-lib</a>. Het resultaat gaat rechtstreeks naar
+          de downloadfunctie van je browser.
+        </p>
+        <ul>
+          <li>Er wordt nooit een bestand, pagina, bestandsnaam of inhoud naar onze server of naar iemand anders gestuurd.</li>
+          <li>Er wordt niets opgeslagen: niet op de server en ook niet in je browser. Sluit of herlaad het tabblad en de bestanden zijn uit het geheugen verdwenen.</li>
+          <li>Er zijn geen accounts, geen cookies, geen statistieken, geen trackers en geen scripts van derden.</li>
+          <li>Het enige dat onthouden wordt is je taalkeuze (Engels of Nederlands), opgeslagen in je eigen browser.</li>
+        </ul>
+        <p>
+          Dit is niet alleen een belofte: de website vertelt je browser via het beveiligingsbeleid
+          (<code>Content-Security-Policy: connect-src 'none'; form-action 'none'</code>) dat deze pagina nergens gegevens
+          naartoe mag sturen. Je browser dwingt dat af, dus zelfs een fout in de code zou je bestanden niet kunnen
+          uploaden.
+        </p>
+
+        <h2>Controleer het zelf</h2>
+        <ul>
+          <li>Open de ontwikkelaarstools van je browser, ga naar het tabblad <em>Netwerk</em> en voeg bestanden samen: je ziet geen verzoeken met je bestanden.</li>
+          <li>Of laad deze pagina, verbreek de internetverbinding en voeg bestanden samen: het blijft werken, omdat er geen netwerk nodig is.</li>
+          <li>De volledige broncode staat openbaar op <a href="https://github.com/josfaber/JoinPDF" rel="noopener">GitHub</a> (MIT-licentie).</li>
+        </ul>
+
+        <h2>Wat de server wel ziet</h2>
+        <p>
+          De server levert alleen de webpagina zelf (HTML, JavaScript, CSS en het icoon). Zoals elke webserver kan hij
+          technische gegevens over die paginaverzoeken vastleggen, zoals IP-adres, tijdstip en de opgevraagde pagina,
+          om misbruik tegen te gaan. Je pdf's ontvangt hij nooit.
+        </p>
+
+        <h2>Beperkingen</h2>
+        <ul>
+          <li>Pdf's met een wachtwoord kunnen niet worden samengevoegd; ze worden in de lijst gemarkeerd.</li>
+          <li>Pagina's worden precies gekopieerd zoals ze zijn, zonder ze opnieuw op te bouwen, dus de kwaliteit verandert niet.</li>
+          <li>Bladwijzers (de inhoudsopgave van het document) en invulbare formuliervelden uit de bronbestanden worden niet overgenomen.</li>
+          <li>Heel grote bestanden worden begrensd door het geheugen van je apparaat en browser.</li>
+        </ul>
+
+        <h2 id="disclaimer-nl">Disclaimer</h2>
+        <p>
+          JoinPDF wordt gratis en "zoals het is" aangeboden, zonder enige garantie. Je bent zelf volledig
+          verantwoordelijk voor de bestanden die je ermee samenvoegt en voor wat je met het resultaat doet. Gebruik
+          alleen documenten die van jou zijn of die je op een andere manier mag gebruiken, kopiëren en bewerken, en houd
+          je aan de regels voor vertrouwelijkheid, auteursrecht en privacy die daarop van toepassing zijn. De maker van
+          JoinPDF aanvaardt geen aansprakelijkheid voor verlies, schade of juridische gevolgen die voortkomen uit het
+          gebruik van deze website.
+        </p>
+      </article>
+    </div>
+    <script type="module" src="/src/about.ts"></script>
+  </body>
+</html>

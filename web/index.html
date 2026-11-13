@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Combine PDF files into one, right in your browser. Your files are never uploaded." />
+    <meta name="referrer" content="no-referrer" />
+    <title>JoinPDF</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <a class="brand" href="/">
+          <img src="/favicon.svg" alt="" width="28" height="28" />
+          <span>JoinPDF</span>
+        </a>
+        <div class="lang-switch" role="group" aria-label="Language / Taal">
+          <button type="button" data-set-lang="en">EN</button>
+          <button type="button" data-set-lang="nl">NL</button>
+        </div>
+      </header>
+
+      <p class="tagline" data-i18n="tagline"></p>
+      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+
+      <main class="app">
+        <section id="drop-zone" class="drop-zone">
+          <ul id="files" class="files"></ul>
+          <div id="empty-hint" class="empty-hint">
+            <div class="empty-icon" aria-hidden="true">⬇</div>
+            <p data-i18n="dropTitle"></p>
+            <p class="sub" data-i18n="dropSub"></p>
+          </div>
+        </section>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <div class="toolbar">
+          <input id="file-input" type="file" accept="application/pdf,.pdf" multiple hidden />
+          <button id="add" class="btn" type="button" data-i18n="add"></button>
+          <button id="clear" class="btn btn-quiet" type="button" data-i18n="clear"></button>
+          <span class="spacer"></span>
+          <button id="export" class="btn btn-primary" type="button" data-i18n="export"></button>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p class="disclaimer" data-i18n="disclaimerShort"></p>
+        <p class="links">
+          <a href="/about" data-i18n="howItWorks"></a>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/josfaber/JoinPDF" rel="noopener" data-i18n="source"></a>
+        </p>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

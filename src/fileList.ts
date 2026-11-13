@@ -37,14 +37,17 @@ export class FileList {
     for (const fn of this.listeners) fn();
   }
 
-  /** Adds paths not already present. Returns the newly added entries. */
-  add(paths: string[]): FileEntry[] {
+  /**
+   * Adds paths (unique keys) not already present. `nameOf` gives the display
+   * name; by default the last path segment. Returns the newly added entries.
+   */
+  add(paths: string[], nameOf: (path: string) => string = baseName): FileEntry[] {
     const known = new Set(this.entries.map((e) => e.path));
     const added: FileEntry[] = [];
     for (const path of paths) {
       if (known.has(path)) continue;
       known.add(path);
-      const entry: FileEntry = { id: nextId++, path, name: baseName(path), status: { state: "loading" } };
+      const entry: FileEntry = { id: nextId++, path, name: nameOf(path), status: { state: "loading" } };
       this.entries.push(entry);
       added.push(entry);
     }

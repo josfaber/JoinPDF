@@ -1,6 +1,10 @@
 # JoinPDF
 
-A tiny desktop app for macOS and Windows that joins multiple PDFs into one.
+Join multiple PDFs into one: as a website that works entirely in your browser, or as a tiny desktop app for macOS and Windows.
+
+**Website:** [joinpdf.josfaber.nl](https://joinpdf.josfaber.nl). Files are never uploaded; see [Website](#website) below.
+
+The desktop app:
 
 - Drop PDFs into the window, or click **＋ Add files**
 - Drag rows to set the order
@@ -34,6 +38,57 @@ xattr -dr com.apple.quarantine /Applications/JoinPDF.app
 
 - Password-protected PDFs are rejected (the file is marked in the list).
 - Bookmarks/outlines from the source files are not carried over.
+
+## Website
+
+`web/` is a static site with the same features: drop or add PDFs, drag to reorder, and **Combine & download**. Everything happens in the visitor's browser with pdf-lib. No file is ever uploaded, and nothing is stored. English and Dutch, with an explanation page and disclaimer at `/about`.
+
+The "never uploaded" promise is enforced by the browser: the site's Content-Security-Policy contains `connect-src 'none'` and `form-action 'none'`, so the page cannot send data anywhere.
+
+```sh
+npm run web:dev       # local development server
+npm run web:build     # static build into web/dist
+```
+
+### Deploying with Docker
+
+The image builds the site and serves it with unprivileged nginx on port 8080. It includes:
+- security headers, including the strict CSP
+- per-IP rate limiting (10 requests/s, burst 40, returning 429)
+- only GET and HEAD allowed, with no request bodies
+- no source maps or dotfiles served
+
+The container runs read-only, without capabilities and with a 64 MB memory limit.
+
+On the server, from the repository root:
+
+```sh
+git pull
+docker compose -f web/docker-compose.yml up -d --build
+```
+
+It listens on `127.0.0.1:8090`; set `JOINPDF_PORT` to change that. Point your reverse proxy (which handles TLS) at it and pass the client IP in `X-Forwarded-For`, so rate limiting is per visitor.
+
+Caddy:
+
+```
+joinpdf.josfaber.nl {
+    reverse_proxy 127.0.0.1:8090
+}
+```
+
+nginx:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:8090;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+If the reverse proxy itself runs in Docker (Traefik, Nginx Proxy Manager), put both containers on a shared Docker network and target `joinpdf-web:8080` instead of the published port.
 
 ## Development
 
