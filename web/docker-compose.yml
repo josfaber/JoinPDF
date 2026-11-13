@@ -1,6 +1,6 @@
 # Run on the server from the repository root:
 #   docker compose -f web/docker-compose.yml up -d --build
-# Then point the reverse proxy for joinpdf.josfaber.nl at port 8084 on this host.
+# Then point your reverse proxy at port 8084 on this host.
 # Override with JOINPDF_PORT=...; set JOINPDF_BIND=127.0.0.1 to keep it off the LAN.
 services:
   joinpdf-web:
