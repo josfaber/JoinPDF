@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx tsc -p .
+      - run: npm test
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+            rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
+          - platform: windows-latest
+            args: ""
+            rust-targets: ""
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust-targets }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          releaseName: JoinPDF ${{ github.ref_name }}
+          releaseBody: |
+            Unsigned build. See the README for how to open it the first time.
+          releaseDraft: true
+          args: ${{ matrix.args }}
+
+      - name: Package portable Windows exe
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path src-tauri/target/release/joinpdf.exe `
+            -DestinationPath "JoinPDF_${{ github.ref_name }}_x64_portable.zip"
+
+      - name: Upload portable zip to release
+        if: matrix.platform == 'windows-latest' && github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: JoinPDF_*_portable.zip
+
+      - name: Upload portable zip as workflow artifact
+        if: matrix.platform == 'windows-latest' && github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-portable
+          path: JoinPDF_*_portable.zip
