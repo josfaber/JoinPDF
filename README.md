@@ -67,13 +67,15 @@ git pull
 docker compose -f web/docker-compose.yml up -d --build
 ```
 
-It listens on `127.0.0.1:8090`; set `JOINPDF_PORT` to change that. Point your reverse proxy (which handles TLS) at it and pass the client IP in `X-Forwarded-For`, so rate limiting is per visitor.
+It listens on `127.0.0.1:8084`; set `JOINPDF_PORT` to change that. Point your reverse proxy (which handles TLS) at it and pass the client IP in `X-Forwarded-For`, so rate limiting is per visitor.
+
+Pangolin (Newt running with host networking): add a resource for `joinpdf.josfaber.nl` with target `http://127.0.0.1:8084`.
 
 Caddy:
 
 ```
 joinpdf.josfaber.nl {
-    reverse_proxy 127.0.0.1:8090
+    reverse_proxy 127.0.0.1:8084
 }
 ```
 
@@ -81,7 +83,7 @@ nginx:
 
 ```nginx
 location / {
-    proxy_pass http://127.0.0.1:8090;
+    proxy_pass http://127.0.0.1:8084;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
