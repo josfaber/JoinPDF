@@ -21,10 +21,7 @@ The web app lives in `web/`.
 
 The site is in English and Dutch: it picks the browser's language, and visitors can switch with EN/NL. The `/about` page explains exactly what the app does and contains the disclaimer.
 
-The site asks search engines not to index it, through three mechanisms:
-- a `robots.txt` that disallows all crawling
-- a `noindex` meta tag in the pages
-- an `X-Robots-Tag` header
+The site asks search engines not to index it with a `noindex` meta tag in the pages and an `X-Robots-Tag: noindex` header. Its `robots.txt` deliberately allows crawling, because crawlers that are blocked from fetching a page never see its `noindex`.
 
 ### Running it with Docker
 

@@ -1,2 +1,5 @@
+# Crawling is allowed on purpose: the pages carry a noindex meta tag and an
+# X-Robots-Tag header, and crawlers can only see those if they may fetch the
+# pages. That is what keeps this site out of search results.
 User-agent: *
-Disallow: /
+Allow: /
