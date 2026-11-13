@@ -4,9 +4,9 @@
   --border: #dcdcd8;
   --text: #1d1d1b;
   --muted: #6b6b65;
-  --accent: #c8312b;
+  --accent: #047857;
   --accent-text: #ffffff;
-  --accent-soft: #fbe9e8;
+  --accent-soft: #e3f5ec;
   --error: #b42318;
   --ok: #1f7a3a;
   /* White would vanish on the white light-mode list, so use the accent there. */
@@ -24,8 +24,9 @@
     --border: #3d3d41;
     --text: #ececea;
     --muted: #a0a09b;
-    --accent: #e5534b;
-    --accent-soft: #3a2422;
+    --accent: #2fbf7a;
+    --accent-text: #06281a;
+    --accent-soft: #173a2a;
     --error: #ff8a80;
     --ok: #6fcf8f;
     --drop-line: #ffffff;
